@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quiz Party</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="host-bubble" class="host-bubble hidden">
+  <div class="host-avatar">🎙️</div>
+  <div class="host-text" id="host-text"></div>
+</div>
+
+<!-- HOME -->
+<section id="screen-home" class="screen active">
+  <h1 class="logo">QUIZ<span>PARTY</span></h1>
+  <p class="tagline">Il quiz a colori per famiglie e amici</p>
+
+  <div class="card">
+    <label>Il tuo nome</label>
+    <input id="input-nickname" type="text" maxlength="16" placeholder="Es. Fabio" />
+
+    <div class="btn-stack">
+      <button class="btn btn-primary" id="btn-goto-create">Crea partita</button>
+      <button class="btn btn-secondary" id="btn-goto-public">Partite pubbliche</button>
+      <button class="btn btn-secondary" id="btn-goto-join">Ho un codice</button>
+      <button class="btn btn-ghost" id="btn-goto-newquestion">Aggiungi una domanda</button>
+    </div>
+  </div>
+  <p class="error" id="home-error"></p>
+</section>
+
+<!-- CREA PARTITA -->
+<section id="screen-create" class="screen">
+  <h2>Crea partita</h2>
+  <div class="card">
+    <label>Visibilità</label>
+    <div class="segmented" id="opt-visibility">
+      <button class="seg-btn active" data-value="private">Chiusa (con codice)</button>
+      <button class="seg-btn" data-value="public">Aperta (chiunque)</button>
+    </div>
+
+    <label>Modalità</label>
+    <div class="segmented" id="opt-mode">
+      <button class="seg-btn active" data-value="rush">Rush — punti in base alla velocità</button>
+      <button class="seg-btn" data-value="classic">Classica — punti fissi, 10s per rispondere</button>
+    </div>
+
+    <label>Livello</label>
+    <div class="segmented" id="opt-difficulty">
+      <button class="seg-btn" data-value="facile">Facile</button>
+      <button class="seg-btn active" data-value="misto">Misto</button>
+      <button class="seg-btn" data-value="medio">Medio</button>
+      <button class="seg-btn" data-value="difficile">Difficile</button>
+    </div>
+
+    <label>Categoria</label>
+    <select id="select-category"><option value="tutte">Tutte</option></select>
+
+    <button class="btn btn-primary" id="btn-create-confirm">Crea la partita</button>
+    <button class="btn btn-ghost" id="btn-create-back">Indietro</button>
+  </div>
+  <p class="error" id="create-error"></p>
+</section>
+
+<!-- PARTITE PUBBLICHE -->
+<section id="screen-public" class="screen">
+  <h2>Partite pubbliche</h2>
+  <div class="card">
+    <div id="public-list" class="public-list"><p class="muted">Ricerca in corso...</p></div>
+    <button class="btn btn-ghost" id="btn-public-back">Indietro</button>
+  </div>
+</section>
+
+<!-- UNISCITI CON CODICE -->
+<section id="screen-join" class="screen">
+  <h2>Unisciti a una partita</h2>
+  <div class="card">
+    <label>Codice partita</label>
+    <input id="input-code" type="text" maxlength="5" placeholder="ES. AB12C" style="text-transform:uppercase" />
+    <button class="btn btn-primary" id="btn-join-confirm">Entra</button>
+    <button class="btn btn-ghost" id="btn-join-back">Indietro</button>
+  </div>
+  <p class="error" id="join-error"></p>
+</section>
+
+<!-- NUOVA DOMANDA -->
+<section id="screen-newquestion" class="screen">
+  <h2>Aggiungi una domanda</h2>
+  <div class="card">
+    <label>Categoria</label>
+    <input id="nq-category" type="text" placeholder="Es. Storia" list="nq-category-list" />
+    <datalist id="nq-category-list"></datalist>
+
+    <label>Difficoltà</label>
+    <div class="segmented" id="nq-difficulty">
+      <button class="seg-btn active" data-value="facile">Facile</button>
+      <button class="seg-btn" data-value="medio">Medio</button>
+      <button class="seg-btn" data-value="difficile">Difficile</button>
+    </div>
+
+    <label>Domanda</label>
+    <input id="nq-text" type="text" placeholder="Testo della domanda" />
+
+    <label class="answer-label answer-yellow">Risposta gialla</label>
+    <input id="nq-a0" type="text" />
+    <label class="answer-label answer-blue">Risposta blu</label>
+    <input id="nq-a1" type="text" />
+    <label class="answer-label answer-orange">Risposta arancione</label>
+    <input id="nq-a2" type="text" />
+    <label class="answer-label answer-green">Risposta verde</label>
+    <input id="nq-a3" type="text" />
+
+    <label>Qual è quella corretta?</label>
+    <div class="segmented" id="nq-correct">
+      <button class="seg-btn active" data-value="0">Gialla</button>
+      <button class="seg-btn" data-value="1">Blu</button>
+      <button class="seg-btn" data-value="2">Arancione</button>
+      <button class="seg-btn" data-value="3">Verde</button>
+    </div>
+
+    <button class="btn btn-primary" id="btn-nq-submit">Salva domanda</button>
+    <button class="btn btn-ghost" id="btn-nq-back">Indietro</button>
+  </div>
+  <p class="error" id="nq-error"></p>
+  <p class="success" id="nq-success"></p>
+</section>
+
+<!-- LOBBY -->
+<section id="screen-lobby" class="screen">
+  <h2>Sala d'attesa</h2>
+  <div class="card">
+    <div id="lobby-code-wrap" class="lobby-code-wrap hidden">
+      <p class="muted">Codice partita</p>
+      <div class="lobby-code" id="lobby-code"></div>
+    </div>
+    <p class="muted" id="lobby-settings"></p>
+    <h3>Giocatori</h3>
+    <ul id="lobby-players" class="player-list"></ul>
+    <button class="btn btn-primary" id="btn-start-game">Avvia partita</button>
+    <p class="muted" id="lobby-wait-msg">In attesa che il presentatore avvii la partita...</p>
+  </div>
+  <p class="error" id="lobby-error"></p>
+</section>
+
+<!-- GIOCO -->
+<section id="screen-game" class="screen">
+  <div class="game-top">
+    <span id="game-phase-label" class="pill"></span>
+    <span id="game-progress" class="pill"></span>
+    <span id="game-category" class="pill"></span>
+  </div>
+
+  <div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
+
+  <div id="tournament-match-banner" class="match-banner hidden"></div>
+  <div id="spectator-banner" class="spectator-banner hidden">Sei fuori dai giochi in questo turno: goditi lo spettacolo! 🍿</div>
+
+  <h2 id="question-text" class="question-text"></h2>
+
+  <div class="answers-grid">
+    <button class="answer-btn answer-yellow" data-idx="0"></button>
+    <button class="answer-btn answer-blue" data-idx="1"></button>
+    <button class="answer-btn answer-orange" data-idx="2"></button>
+    <button class="answer-btn answer-green" data-idx="3"></button>
+  </div>
+
+  <div id="mini-scoreboard" class="mini-scoreboard"></div>
+</section>
+
+<!-- FASE 1 - RISULTATI -->
+<section id="screen-phase1end" class="screen">
+  <h2>Fine della prima fase!</h2>
+  <div class="card">
+    <p class="muted">Passano al torneo i migliori classificati:</p>
+    <ol id="phase1-standings" class="standings-list"></ol>
+  </div>
+</section>
+
+<!-- TORNEO -->
+<section id="screen-tournament" class="screen">
+  <h2>Torneo ad eliminazione diretta</h2>
+  <div class="card">
+    <div id="bracket-view" class="bracket-view"></div>
+  </div>
+</section>
+
+<!-- FINALE -->
+<section id="screen-final" class="screen">
+  <h2 class="winner-title">🏆 Vincitore 🏆</h2>
+  <div class="card">
+    <div id="final-winner" class="final-winner"></div>
+    <h3>Classifica finale</h3>
+    <ol id="final-standings" class="standings-list"></ol>
+    <button class="btn btn-primary" id="btn-play-again">Torna alla home</button>
+  </div>
+</section>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
