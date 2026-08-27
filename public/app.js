@@ -1,451 +1,842 @@
 (() => {
+
   const socket = io();
 
-  // ---- Stato locale --------------------------------------------------
   let myId = null;
   let myNickname = '';
   let currentRoomCode = null;
   let isHost = false;
-  let createSettings = { visibility: 'private', mode: 'rush', difficulty: 'misto' };
-  let newQuestionState = { difficulty: 'facile', correct: 0 };
-  let playersById = new Map(); // id -> nickname (aggiornata da lobby/scoreboard)
-  let currentEligibleIds = null;
-  let currentCorrectIndex = null;
+
+  let createSettings = {
+    visibility: 'private',
+    mode: 'rush',
+    difficulty: 'misto',
+    category: 'tutte'
+  };
+
+  let newQuestionState = {
+    difficulty: 'facile',
+    correct: 0
+  };
+
   let answered = false;
   let timerInterval = null;
   let hostBubbleTimeout = null;
-  let bracketRounds = [];
+  let currentEligibleIds = null;
+  let sessionGames = 0;
 
-  // ---- Helpers UI ------------------------------------------------------
+  const $ = id => document.getElementById(id);
+
   function showScreen(id) {
-    document.querySelectorAll('.screen').forEach((s) => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    document
+      .querySelectorAll('.screen')
+      .forEach(s => s.classList.remove('active'));
+
+    $(id).classList.add('active');
   }
 
-  function setError(id, msg) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = msg || '';
+  function error(id, msg) {
+    $(id).textContent = msg || '';
   }
 
   function showHostLine(text) {
-    const bubble = document.getElementById('host-bubble');
-    const textEl = document.getElementById('host-text');
-    textEl.textContent = text;
-    bubble.classList.remove('hidden');
+
+    $('host-text').textContent = text;
+
+    $('host-bubble').classList.remove('hidden');
+
     clearTimeout(hostBubbleTimeout);
-    hostBubbleTimeout = setTimeout(() => bubble.classList.add('hidden'), 5000);
+
+    hostBubbleTimeout = setTimeout(() => {
+      $('host-bubble').classList.add('hidden');
+    }, 5200);
   }
 
   function toast(msg) {
-    let el = document.getElementById('toast');
+
+    let el = $('toast');
+
     if (!el) {
       el = document.createElement('div');
       el.id = 'toast';
-      el.style.position = 'fixed';
-      el.style.bottom = '20px';
-      el.style.left = '50%';
-      el.style.transform = 'translateX(-50%)';
-      el.style.background = '#262852';
-      el.style.color = '#fff';
-      el.style.padding = '10px 18px';
-      el.style.borderRadius = '10px';
-      el.style.zIndex = '200';
-      el.style.fontSize = '0.85rem';
-      el.style.maxWidth = '90%';
-      el.style.textAlign = 'center';
       document.body.appendChild(el);
     }
-    el.textContent = msg;
-    el.style.display = 'block';
-    clearTimeout(el._hideTimeout);
-    el._hideTimeout = setTimeout(() => { el.style.display = 'none'; }, 4000);
-  }
 
-  function requireNickname() {
-    const val = document.getElementById('input-nickname').value.trim();
-    if (!val) {
-      setError('home-error', 'Inserisci prima il tuo nome');
-      showScreen('screen-home');
-      return null;
-    }
-    myNickname = val;
-    return val;
-  }
-
-  // ---- Caricamento categorie -------------------------------------------
-  function loadCategories() {
-    fetch('/api/categories')
-      .then((r) => r.json())
-      .then((data) => {
-        const select = document.getElementById('select-category');
-        const datalist = document.getElementById('nq-category-list');
-        select.innerHTML = '<option value="tutte">Tutte</option>';
-        datalist.innerHTML = '';
-        data.categories.forEach((c) => {
-          const opt = document.createElement('option');
-          opt.value = c;
-          opt.textContent = c;
-          select.appendChild(opt);
-          const dopt = document.createElement('option');
-          dopt.value = c;
-          datalist.appendChild(dopt);
-        });
-      })
-      .catch(() => {});
-  }
-
-  // ---- Segmented controls generiche ------------------------------------
-  function wireSegmented(containerId, onChange) {
-    const container = document.getElementById(containerId);
-    container.querySelectorAll('.seg-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        container.querySelectorAll('.seg-btn').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        onChange(btn.dataset.value);
-      });
+    Object.assign(el.style, {
+      position: 'fixed',
+      bottom: '18px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      zIndex: 50,
+      background: '#242952',
+      padding: '12px 18px',
+      borderRadius: '12px',
+      border: '1px solid #4b548d'
     });
+
+    el.textContent = msg;
   }
 
-  wireSegmented('opt-visibility', (v) => (createSettings.visibility = v));
-  wireSegmented('opt-mode', (v) => (createSettings.mode = v));
-  wireSegmented('opt-difficulty', (v) => (createSettings.difficulty = v));
-  wireSegmented('nq-difficulty', (v) => (newQuestionState.difficulty = v));
-  wireSegmented('nq-correct', (v) => (newQuestionState.correct = parseInt(v, 10)));
+  function setupSegmented(id, setter) {
 
-  // ---- Navigazione -------------------------------------------------------
-  document.getElementById('btn-goto-create').addEventListener('click', () => {
-    if (!requireNickname()) return;
-    setError('create-error', '');
+    document
+      .querySelectorAll(`#${id} .seg-btn`)
+      .forEach(btn => {
+
+        btn.addEventListener('click', () => {
+
+          document
+            .querySelectorAll(`#${id} .seg-btn`)
+            .forEach(b => b.classList.remove('active'));
+
+          btn.classList.add('active');
+
+          setter(btn.dataset.value);
+        });
+
+      });
+  }
+
+  $('btn-goto-create').onclick = () => {
+
+    if (!myNickname)
+      myNickname = $('input-nickname').value.trim();
+
+    if (!myNickname)
+      return error('home-error', 'Inserisci un nome');
+
+    error('home-error', '');
+
     showScreen('screen-create');
-  });
-  document.getElementById('btn-create-back').addEventListener('click', () => showScreen('screen-home'));
+  };
 
-  document.getElementById('btn-goto-public').addEventListener('click', () => {
-    if (!requireNickname()) return;
+  $('btn-goto-public').onclick = () => {
+
+    if (!myNickname)
+      myNickname = $('input-nickname').value.trim();
+
+    if (!myNickname)
+      return error('home-error', 'Inserisci un nome');
+
     showScreen('screen-public');
-    refreshPublicList();
-  });
-  document.getElementById('btn-public-back').addEventListener('click', () => showScreen('screen-home'));
 
-  document.getElementById('btn-goto-join').addEventListener('click', () => {
-    if (!requireNickname()) return;
-    setError('join-error', '');
+    socket.emit('lobby:list', res => {
+      renderPublic(res.lobbies);
+    });
+  };
+
+  $('btn-goto-join').onclick = () => {
+
+    if (!myNickname)
+      myNickname = $('input-nickname').value.trim();
+
+    if (!myNickname)
+      return error('home-error', 'Inserisci un nome');
+
     showScreen('screen-join');
-  });
-  document.getElementById('btn-join-back').addEventListener('click', () => showScreen('screen-home'));
+  };
 
-  document.getElementById('btn-goto-newquestion').addEventListener('click', () => {
-    setError('nq-error', '');
-    document.getElementById('nq-success').textContent = '';
+  $('btn-goto-newquestion').onclick = () => {
     showScreen('screen-newquestion');
-  });
-  document.getElementById('btn-nq-back').addEventListener('click', () => showScreen('screen-home'));
+  };
 
-  document.getElementById('btn-play-again').addEventListener('click', () => location.reload());
+  $('btn-create-back').onclick = () => showScreen('screen-home');
+  $('btn-public-back').onclick = () => showScreen('screen-home');
+  $('btn-join-back').onclick = () => showScreen('screen-home');
+  $('btn-nq-back').onclick = () => showScreen('screen-home');
+  $('btn-home-final').onclick = () => showScreen('screen-home');
 
-  // ---- Creazione partita ---------------------------------------------
-  document.getElementById('btn-create-confirm').addEventListener('click', () => {
-    const category = document.getElementById('select-category').value;
+  setupSegmented(
+    'opt-visibility',
+    v => createSettings.visibility = v
+  );
+
+  setupSegmented(
+    'opt-mode',
+    v => createSettings.mode = v
+  );
+
+  setupSegmented(
+    'opt-difficulty',
+    v => createSettings.difficulty = v
+  );
+
+  setupSegmented(
+    'nq-difficulty',
+    v => newQuestionState.difficulty = v
+  );
+
+  setupSegmented(
+    'nq-correct',
+    v => newQuestionState.correct = Number(v)
+  );
+
+  $('select-category').onchange = e => {
+    createSettings.category = e.target.value;
+  };
+
+  $('btn-create-confirm').onclick = () => {
+
+    myNickname =
+      $('input-nickname').value.trim() ||
+      myNickname;
+
+    if (!myNickname)
+      return error('create-error', 'Inserisci un nome');
+
     socket.emit(
       'lobby:create',
-      { nickname: myNickname, visibility: createSettings.visibility, mode: createSettings.mode, difficulty: createSettings.difficulty, category },
-      (res) => {
-        if (res.error) return setError('create-error', res.error);
+      {
+        ...createSettings,
+        nickname: myNickname
+      },
+      res => {
+
+        if (res.error)
+          return error('create-error', res.error);
+
         currentRoomCode = res.code;
         isHost = true;
+
         renderLobby(res.summary);
         showScreen('screen-lobby');
       }
     );
-  });
+  };
 
-  // ---- Unione con codice ------------------------------------------------
-  document.getElementById('btn-join-confirm').addEventListener('click', () => {
-    const code = document.getElementById('input-code').value.trim().toUpperCase();
-    if (!code) return setError('join-error', 'Inserisci un codice valido');
-    socket.emit('lobby:join', { code, nickname: myNickname }, (res) => {
-      if (res.error) return setError('join-error', res.error);
-      currentRoomCode = res.code;
-      isHost = false;
-      renderLobby(res.summary);
-      showScreen('screen-lobby');
-    });
-  });
+  $('btn-join-confirm').onclick = () => {
 
-  // ---- Partite pubbliche --------------------------------------------
-  function refreshPublicList() {
-    socket.emit('lobby:list', (res) => renderPublicList(res.lobbies || []));
-  }
+    const code =
+      $('input-code')
+        .value
+        .trim()
+        .toUpperCase();
 
-  function renderPublicList(lobbies) {
-    const el = document.getElementById('public-list');
-    if (!lobbies.length) {
-      el.innerHTML = '<p class="muted">Nessuna partita pubblica al momento. Creane una tu!</p>';
-      return;
+    if (code.length !== 5)
+      return error(
+        'join-error',
+        'Il codice deve avere 5 caratteri'
+      );
+
+    socket.emit(
+      'lobby:join',
+      {
+        code,
+        nickname: myNickname
+      },
+      res => {
+
+        if (res.error)
+          return error('join-error', res.error);
+
+        currentRoomCode = res.code;
+        isHost = false;
+
+        renderLobby(res.summary);
+        showScreen('screen-lobby');
+      }
+    );
+  };
+
+  $('btn-nq-submit').onclick = () => {
+
+    const category =
+      $('nq-category').value.trim();
+
+    const text =
+      $('nq-text').value.trim();
+
+    const answers =
+      [0, 1, 2, 3]
+        .map(i => $('nq-a' + i).value.trim());
+
+    if (
+      !category ||
+      !text ||
+      answers.some(a => !a)
+    ) {
+      return error(
+        'nq-error',
+        'Compila tutti i campi'
+      );
     }
-    el.innerHTML = '';
-    lobbies.forEach((l) => {
-      const div = document.createElement('div');
-      div.className = 'lobby-item';
-      div.innerHTML = `<div><strong>${l.players} giocatori</strong><br/><span class="muted">${l.mode === 'rush' ? 'Rush' : 'Classica'} · ${l.difficulty} · ${l.category}</span></div>`;
-      const btn = document.createElement('button');
-      btn.textContent = 'Unisciti';
-      btn.addEventListener('click', () => {
-        socket.emit('lobby:join', { code: l.code, nickname: myNickname }, (res) => {
-          if (res.error) return toast(res.error);
-          currentRoomCode = res.code;
-          isHost = false;
-          renderLobby(res.summary);
-          showScreen('screen-lobby');
-        });
-      });
-      div.appendChild(btn);
-      el.appendChild(div);
-    });
-  }
 
-  socket.on('lobby:publicList', (lobbies) => {
-    if (document.getElementById('screen-public').classList.contains('active')) {
-      renderPublicList(lobbies);
-    }
-  });
-
-  // ---- Creazione domanda ------------------------------------------------
-  document.getElementById('btn-nq-submit').addEventListener('click', () => {
-    const category = document.getElementById('nq-category').value.trim();
-    const text = document.getElementById('nq-text').value.trim();
-    const answers = [0, 1, 2, 3].map((i) => document.getElementById('nq-a' + i).value.trim());
-    if (!category || !text || answers.some((a) => !a)) {
-      return setError('nq-error', 'Compila tutti i campi');
-    }
     fetch('/api/questions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ category, difficulty: newQuestionState.difficulty, text, answers, correctIndex: newQuestionState.correct }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        category,
+        difficulty: newQuestionState.difficulty,
+        text,
+        answers,
+        correctIndex: newQuestionState.correct
+      })
     })
-      .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+      .then(r =>
+        r.json().then(data => ({
+          ok: r.ok,
+          data
+        }))
+      )
       .then(({ ok, data }) => {
-        if (!ok) return setError('nq-error', data.error || 'Errore');
-        setError('nq-error', '');
-        document.getElementById('nq-success').textContent = 'Domanda salvata, grazie!';
-        document.getElementById('nq-text').value = '';
-        [0, 1, 2, 3].forEach((i) => (document.getElementById('nq-a' + i).value = ''));
+
+        if (!ok)
+          return error(
+            'nq-error',
+            data.error || 'Errore'
+          );
+
+        error('nq-error', '');
+
+        $('nq-success').textContent =
+          'Domanda salvata!';
+
+        [
+          'nq-text',
+          'nq-a0',
+          'nq-a1',
+          'nq-a2',
+          'nq-a3'
+        ].forEach(id => {
+          $(id).value = '';
+        });
+
         loadCategories();
       })
-      .catch(() => setError('nq-error', 'Errore di connessione'));
-  });
+      .catch(() => {
+        error(
+          'nq-error',
+          'Errore di connessione'
+        );
+      });
+  };
 
-  // ---- Lobby --------------------------------------------------------
-  function renderLobby(summary) {
-    const codeWrap = document.getElementById('lobby-code-wrap');
-    if (summary.visibility === 'private') {
-      codeWrap.classList.remove('hidden');
-      document.getElementById('lobby-code').textContent = summary.code;
-    } else {
-      codeWrap.classList.add('hidden');
-    }
-    const modeLabel = summary.mode === 'rush' ? 'Rush (velocità)' : 'Classica (10s, punti fissi)';
-    document.getElementById('lobby-settings').textContent =
-      `${summary.visibility === 'public' ? 'Partita aperta' : 'Partita chiusa'} · ${modeLabel} · Livello: ${summary.difficulty} · Categoria: ${summary.category}`;
+  function renderLobby(s) {
 
-    const list = document.getElementById('lobby-players');
-    list.innerHTML = '';
-    summary.players.forEach((p) => {
-      const li = document.createElement('li');
-      li.innerHTML = `<span>${p.nickname}${p.connected ? '' : ' (disconnesso)'}</span>${p.isHost ? '<span class="host-tag">HOST</span>' : ''}`;
-      list.appendChild(li);
-    });
+    $('lobby-code-wrap')
+      .classList
+      .toggle(
+        'hidden',
+        s.visibility !== 'private'
+      );
 
-    const startBtn = document.getElementById('btn-start-game');
-    const waitMsg = document.getElementById('lobby-wait-msg');
-    if (isHost) {
-      startBtn.classList.remove('hidden');
-      waitMsg.classList.add('hidden');
-    } else {
-      startBtn.classList.add('hidden');
-      waitMsg.classList.remove('hidden');
-    }
+    $('lobby-code').textContent = s.code;
+
+    $('lobby-settings').textContent =
+      `${s.mode === 'rush' ? 'Rush' : 'Classica'} · ` +
+      `${s.difficulty} · ${s.category} · ` +
+      `Partite sessione: ${s.sessionGames || 0}`;
+
+    $('lobby-players').innerHTML =
+      s.players
+        .map(p => `
+          <li>
+            <span>
+              ${p.nickname}
+              ${p.connected ? '' : ' (disconnesso)'}
+            </span>
+
+            ${p.isHost
+              ? '<span class="host-tag">HOST</span>'
+              : ''}
+          </li>
+        `)
+        .join('');
+
+    $('btn-start-game')
+      .classList
+      .toggle('hidden', !isHost);
+
+    $('lobby-wait-msg')
+      .classList
+      .toggle('hidden', isHost);
   }
 
-  socket.on('lobby:update', (summary) => {
-    if (summary.code !== currentRoomCode) return;
-    renderLobby(summary);
-  });
+  $('btn-start-game').onclick = () => {
 
-  document.getElementById('btn-start-game').addEventListener('click', () => {
-    socket.emit('lobby:start', (res) => {
-      if (res.error) setError('lobby-error', res.error);
-      else setError('lobby-error', '');
-    });
-  });
+    socket.emit(
+      'lobby:start',
+      res => {
+        if (res.error)
+          error('lobby-error', res.error);
+      }
+    );
+  };
 
-  // ---- Presentatore -------------------------------------------------
-  socket.on('host:say', (data) => showHostLine(data.text));
+  function renderPublic(lobbies) {
 
-  // ---- Domande / gameplay --------------------------------------------
+    $('public-list').innerHTML =
+      lobbies.length
+        ? lobbies.map(l => `
+          <div class="lobby-item">
+
+            <span>
+              <strong>${l.code}</strong><br>
+              <span class="muted">
+                ${l.players} giocatori ·
+                ${l.mode} ·
+                ${l.category}
+              </span>
+            </span>
+
+            <button
+              onclick="window.joinPublic('${l.code}')">
+              Unisciti
+            </button>
+
+          </div>
+        `).join('')
+        : '<p class="muted">Nessuna partita aperta.</p>';
+  }
+
+  window.joinPublic = code => {
+
+    socket.emit(
+      'lobby:join',
+      {
+        code,
+        nickname: myNickname
+      },
+      res => {
+
+        if (res.error)
+          return toast(res.error);
+
+        currentRoomCode = res.code;
+        isHost = false;
+
+        renderLobby(res.summary);
+        showScreen('screen-lobby');
+      }
+    );
+  };
+
+  socket.on(
+    'lobby:publicList',
+    renderPublic
+  );
+
+  socket.on(
+    'lobby:update',
+    s => {
+
+      if (s.code === currentRoomCode)
+        renderLobby(s);
+    }
+  );
+
+  socket.on(
+    'host:say',
+    d => showHostLine(d.text)
+  );
+
   function stopTimer() {
-    if (timerInterval) clearInterval(timerInterval);
+
+    if (timerInterval)
+      clearInterval(timerInterval);
+
     timerInterval = null;
   }
 
-  function startTimer(durationMs) {
+  function startTimer(ms) {
+
     stopTimer();
-    const endTs = Date.now() + durationMs;
-    const fill = document.getElementById('timer-fill');
-    fill.style.width = '100%';
-    timerInterval = setInterval(() => {
-      const remaining = Math.max(0, endTs - Date.now());
-      const pct = (remaining / durationMs) * 100;
-      fill.style.width = pct + '%';
-      if (remaining <= 0) stopTimer();
-    }, 100);
+
+    const end =
+      Date.now() + ms;
+
+    const fill =
+      $('timer-fill');
+
+    timerInterval =
+      setInterval(() => {
+
+        const rem =
+          Math.max(
+            0,
+            end - Date.now()
+          );
+
+        fill.style.width =
+          (rem / ms * 100) + '%';
+
+        if (!rem)
+          stopTimer();
+
+      }, 80);
   }
 
-  socket.on('game:question', (q) => {
-    showScreen('screen-game');
-    answered = false;
-    currentEligibleIds = q.eligibleIds;
-    currentCorrectIndex = null;
+  function renderMini(scoreboard) {
 
-    document.getElementById('game-phase-label').textContent = q.phase === 'tournament' ? 'Torneo' : 'Fase 1';
-    document.getElementById('game-progress').textContent = `Domanda ${q.index + 1}/${q.total}`;
-    document.getElementById('game-category').textContent = `${q.category} · ${q.difficulty}`;
-    document.getElementById('question-text').textContent = q.text;
+    $('mini-scoreboard').innerHTML =
+      scoreboard
+        .map((p, i) => `
+          <div
+            class="row ${p.id === myId ? 'me' : ''}">
+            <span>
+              ${i + 1}.
+              ${p.nickname}
+              ${p.eliminated ? ' ❌' : ''}
+            </span>
 
-    const banner = document.getElementById('tournament-match-banner');
-    const spectatorBanner = document.getElementById('spectator-banner');
-    const iAmEligible = !currentEligibleIds || currentEligibleIds.includes(myId);
-
-    if (q.match) {
-      banner.classList.remove('hidden');
-      banner.textContent = `${q.match.a} 🆚 ${q.match.b}`;
-    } else {
-      banner.classList.add('hidden');
-    }
-
-    if (!iAmEligible) {
-      spectatorBanner.classList.remove('hidden');
-    } else {
-      spectatorBanner.classList.add('hidden');
-    }
-
-    const buttons = document.querySelectorAll('.answer-btn');
-    buttons.forEach((btn, i) => {
-      btn.textContent = q.answers[i];
-      btn.classList.remove('correct', 'wrong-pick', 'selected');
-      btn.disabled = !iAmEligible;
-    });
-
-    startTimer(q.timeLimitMs);
-  });
-
-  document.querySelectorAll('.answer-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      if (answered) return;
-      const iAmEligible = !currentEligibleIds || currentEligibleIds.includes(myId);
-      if (!iAmEligible) return;
-      answered = true;
-      const idx = parseInt(btn.dataset.idx, 10);
-      socket.emit('game:answer', { answerIndex: idx });
-      document.querySelectorAll('.answer-btn').forEach((b) => (b.disabled = true));
-      btn.classList.add('selected');
-    });
-  });
-
-  function renderMiniScoreboard(scoreboard) {
-    scoreboard.forEach((p) => playersById.set(p.id, p.nickname));
-    const el = document.getElementById('mini-scoreboard');
-    el.innerHTML = '';
-    scoreboard.forEach((p, i) => {
-      const row = document.createElement('div');
-      row.className = 'row' + (p.id === myId ? ' me' : '');
-      row.innerHTML = `<span>${i + 1}. ${p.nickname}${p.eliminated ? ' ❌' : ''}</span><span>${p.score} pt</span>`;
-      el.appendChild(row);
-    });
+            <span>
+              ${p.score} pt
+            </span>
+          </div>
+        `)
+        .join('');
   }
 
-  socket.on('game:questionResult', (data) => {
-    stopTimer();
-    currentCorrectIndex = data.correctIndex;
-    const buttons = document.querySelectorAll('.answer-btn');
-    buttons.forEach((btn, i) => {
-      if (i === data.correctIndex) btn.classList.add('correct');
-    });
-    const mine = data.results.find((r) => r.id === myId);
-    if (mine && mine.answerIndex !== null && mine.answerIndex !== data.correctIndex) {
-      buttons[mine.answerIndex].classList.add('wrong-pick');
+  socket.on(
+    'game:question',
+    q => {
+
+      showScreen('screen-game');
+
+      answered = false;
+      currentEligibleIds = q.eligibleIds;
+
+      $('game-phase-label').textContent =
+        q.phase === 'elimination'
+          ? 'ELIMINAZIONE'
+          : 'FASE 1';
+
+      $('game-progress').textContent =
+        q.phase === 'elimination'
+          ? `Turno ${q.eliminationRound}`
+          : `Domanda ${q.index + 1}/${q.total}`;
+
+      $('game-category').textContent =
+        `${q.category} · ${q.difficulty}`;
+
+      $('question-text').textContent =
+        q.text;
+
+      $('elimination-head')
+        .classList
+        .toggle(
+          'hidden',
+          q.phase !== 'elimination'
+        );
+
+      if (q.phase === 'elimination') {
+
+        $('remaining-count').textContent =
+          `${q.eligibleIds.length} ancora in gioco`;
+      }
+
+      const eligible =
+        !q.eligibleIds ||
+        q.eligibleIds.includes(myId);
+
+      $('spectator-banner')
+        .classList
+        .toggle('hidden', eligible);
+
+      document
+        .querySelectorAll('.answer-btn')
+        .forEach((b, i) => {
+
+          b.textContent =
+            q.answers[i];
+
+          b.disabled =
+            !eligible;
+
+          b.classList.remove(
+            'correct',
+            'wrong-pick',
+            'selected'
+          );
+        });
+
+      startTimer(q.timeLimitMs);
     }
-    if (data.scoreboard) renderMiniScoreboard(data.scoreboard);
-  });
+  );
 
-  // ---- Fine fase 1 -----------------------------------------------------
-  socket.on('phase1:end', (data) => {
-    showScreen('screen-phase1end');
-    const list = document.getElementById('phase1-standings');
-    list.innerHTML = '';
-    data.standings.forEach((p) => {
-      playersById.set(p.id, p.nickname);
-      const li = document.createElement('li');
-      const qualified = data.qualifiers.includes(p.id);
-      li.innerHTML = `${p.nickname} — ${p.score} pt ${qualified ? '✅ al torneo' : '❌ eliminato'}`;
-      list.appendChild(li);
+  document
+    .querySelectorAll('.answer-btn')
+    .forEach(b => {
+
+      b.onclick = () => {
+
+        if (answered)
+          return;
+
+        const eligible =
+          !currentEligibleIds ||
+          currentEligibleIds.includes(myId);
+
+        if (!eligible)
+          return;
+
+        answered = true;
+
+        socket.emit(
+          'game:answer',
+          {
+            answerIndex:
+              Number(b.dataset.idx)
+          }
+        );
+
+        document
+          .querySelectorAll('.answer-btn')
+          .forEach(x => {
+            x.disabled = true;
+          });
+
+        b.classList.add('selected');
+      };
     });
-  });
 
-  // ---- Torneo ---------------------------------------------------------
-  socket.on('tournament:start', () => {
-    bracketRounds = [];
-  });
+  socket.on(
+    'game:questionResult',
+    data => {
 
-  socket.on('tournament:round', (data) => {
-    bracketRounds.push({ round: data.round, difficulty: data.difficulty, pairs: data.pairs, results: [] });
-    renderBracket();
-    showScreen('screen-tournament');
-  });
+      stopTimer();
 
-  socket.on('tournament:matchResult', (data) => {
-    const last = bracketRounds[bracketRounds.length - 1];
-    if (last) last.results.push(data);
-    renderBracket();
-  });
+      document
+        .querySelectorAll('.answer-btn')
+        .forEach((b, i) => {
 
-  function renderBracket() {
-    const el = document.getElementById('bracket-view');
-    el.innerHTML = '';
-    bracketRounds.forEach((r) => {
-      const roundDiv = document.createElement('div');
-      roundDiv.className = 'round';
-      roundDiv.innerHTML = `<h3>Turno ${r.round} — livello ${r.difficulty}</h3>`;
-      r.pairs.forEach((pair, i) => {
-        const pairDiv = document.createElement('div');
-        pairDiv.className = 'pair';
-        const a = pair.a || 'BYE';
-        const b = pair.b || 'BYE';
-        pairDiv.innerHTML = `<span>${a}</span><span>vs</span><span>${b}</span>`;
-        roundDiv.appendChild(pairDiv);
-      });
-      el.appendChild(roundDiv);
-    });
+          if (i === data.correctIndex)
+            b.classList.add('correct');
+        });
+
+      const mine =
+        data.results.find(
+          r => r.id === myId
+        );
+
+      if (
+        mine &&
+        mine.answerIndex !== null &&
+        mine.answerIndex !== data.correctIndex
+      ) {
+
+        document
+          .querySelectorAll('.answer-btn')
+          [mine.answerIndex]
+          .classList
+          .add('wrong-pick');
+      }
+
+      if (data.scoreboard)
+        renderMini(data.scoreboard);
+    }
+  );
+
+  socket.on(
+    'phase1:end',
+    data => {
+
+      showScreen('screen-phase1end');
+
+      $('phase1-standings').innerHTML =
+        data.standings
+          .map(p => `
+            <li>
+              <strong>
+                ${p.nickname}
+              </strong>
+              — ${p.score} pt
+            </li>
+          `)
+          .join('');
+    }
+  );
+
+  socket.on(
+    'elimination:start',
+    data => {
+
+      showScreen('screen-elimination');
+
+      renderLive(
+        data.activeIds,
+        []
+      );
+    }
+  );
+
+  socket.on(
+    'elimination:roundResult',
+    data => {
+
+      renderLive(
+        data.survivors.concat(
+          data.eliminated
+        ),
+        data.eliminated
+      );
+
+      if (data.allWrong) {
+
+        showHostLine(
+          'Tutti hanno sbagliato. Nessuno eliminato. Si continua.'
+        );
+      }
+    }
+  );
+
+  function renderLive(ids, out) {
+
+    const set =
+      new Set(out);
+
+    $('elimination-live-list').innerHTML =
+      ids
+        .map(id => `
+          <div
+            class="live-row ${
+              set.has(id) ? 'out' : ''
+            }">
+
+            <span>
+              👤
+              ${id === myId
+                ? 'Tu'
+                : 'Giocatore'}
+            </span>
+
+            <span>
+              ${
+                set.has(id)
+                  ? '❌ FUORI'
+                  : '🟢 IN GIOCO'
+              }
+            </span>
+
+          </div>
+        `)
+        .join('');
   }
 
-  // ---- Finale -----------------------------------------------------------
-  socket.on('game:final', (data) => {
-    showScreen('screen-final');
-    document.getElementById('final-winner').textContent = data.championName ? `${data.championName} 🎉` : 'Nessun vincitore';
-    const list = document.getElementById('final-standings');
-    list.innerHTML = '';
-    data.standings.forEach((p) => {
-      const li = document.createElement('li');
-      li.textContent = `${p.nickname} — ${p.score} pt`;
-      list.appendChild(li);
-    });
-  });
+  socket.on(
+    'session:update',
+    d => {
+      sessionGames =
+        d.gameNumber || sessionGames;
+    }
+  );
 
-  socket.on('error', (data) => toast(data.message || 'Errore'));
+  $('btn-next-game').onclick = () => {
 
-  socket.on('connect', () => {
-    myId = socket.id;
-  });
+    socket.emit(
+      'session:nextGame',
+      res => {
+
+        if (res.error)
+          toast(res.error);
+      }
+    );
+  };
+
+  socket.on(
+    'game:final',
+    data => {
+
+      showScreen('screen-final');
+
+      $('final-winner').textContent =
+        data.championName
+          ? `${data.championName} 🎉`
+          : 'Nessun vincitore';
+
+      const gameRank =
+        data.gameStandings;
+
+      $('game-awards').innerHTML =
+        gameRank
+          .map((p, i) => `
+            <div class="${
+              i === 0
+                ? 'gold'
+                : i === 1
+                  ? 'silver'
+                  : i === 2
+                    ? 'bronze'
+                    : ''
+            }">
+
+              <span>
+                ${i + 1}.
+                ${p.nickname}
+              </span>
+
+              <strong>
+                ${
+                  i === 0
+                    ? '+1000'
+                    : i === 1
+                      ? '+500'
+                      : i === 2
+                        ? '+250'
+                        : '+0'
+                }
+              </strong>
+
+            </div>
+          `)
+          .join('');
+
+      $('final-standings').innerHTML =
+        data.sessionStandings
+          .map((p, i) => `
+            <li>
+              <strong>
+                ${p.nickname}
+              </strong>
+              —
+              ${p.sessionScore}
+              punti sessione
+            </li>
+          `)
+          .join('');
+
+      $('btn-next-game')
+        .classList
+        .toggle(
+          'hidden',
+          !isHost
+        );
+    }
+  );
+
+  socket.on(
+    'error',
+    d => toast(
+      d.message || 'Errore'
+    )
+  );
+
+  socket.on(
+    'connect',
+    () => {
+      myId = socket.id;
+    }
+  );
+
+  function loadCategories() {
+
+    fetch('/api/categories')
+      .then(r => r.json())
+      .then(({ categories }) => {
+
+        $('select-category').innerHTML =
+          '<option value="tutte">Tutte</option>' +
+          categories
+            .map(c =>
+              `<option>${c}</option>`
+            )
+            .join('');
+      })
+      .catch(() => {});
+  }
 
   loadCategories();
+
 })();
