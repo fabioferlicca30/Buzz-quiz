@@ -3118,5 +3118,1175 @@
       "Oracle (dall'inizio)"
     ],
     "correctIndex": 1
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "Qual è l'unità di misura della forza nel Sistema Internazionale?",
+    "answers": [
+      "Joule",
+      "Newton",
+      "Watt",
+      "Pascal"
+    ],
+    "correctIndex": 1,
+    "id": "q0241"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "Qual è l'unità di misura dell'energia nel Sistema Internazionale?",
+    "answers": [
+      "Newton",
+      "Joule",
+      "Tesla",
+      "Volt"
+    ],
+    "correctIndex": 1,
+    "id": "q0242"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "Quale grandezza misura la rapidità con cui cambia la velocità?",
+    "answers": [
+      "Massa",
+      "Accelerazione",
+      "Pressione",
+      "Densità"
+    ],
+    "correctIndex": 1,
+    "id": "q0243"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "Quanto vale circa l'accelerazione di gravità sulla Terra?",
+    "answers": [
+      "1,8 m/s²",
+      "9,8 m/s²",
+      "98 m/s²",
+      "0,98 m/s²"
+    ],
+    "correctIndex": 1,
+    "id": "q0244"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "Quale particella ha carica elettrica negativa?",
+    "answers": [
+      "Protone",
+      "Neutrone",
+      "Elettrone",
+      "Fotone"
+    ],
+    "correctIndex": 2,
+    "id": "q0245"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "La luce nel vuoto viaggia a circa...",
+    "answers": [
+      "300 km/s",
+      "3.000 km/s",
+      "30.000 km/s",
+      "300.000 km/s"
+    ],
+    "correctIndex": 3,
+    "id": "q0246"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "Quale strumento misura la temperatura?",
+    "answers": [
+      "Barometro",
+      "Termometro",
+      "Amperometro",
+      "Dinamometro"
+    ],
+    "correctIndex": 1,
+    "id": "q0247"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "Qual è l'unità SI della potenza?",
+    "answers": [
+      "Watt",
+      "Volt",
+      "Ohm",
+      "Joule"
+    ],
+    "correctIndex": 0,
+    "id": "q0248"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "Se una forza netta su un corpo è zero, il corpo...",
+    "answers": [
+      "Deve essere fermo",
+      "Ha necessariamente accelerazione negativa",
+      "Può essere fermo o muoversi a velocità costante",
+      "Deve muoversi in cerchio"
+    ],
+    "correctIndex": 2,
+    "id": "q0249"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "facile",
+    "text": "Quale tra questi è un buon conduttore elettrico?",
+    "answers": [
+      "Rame",
+      "Gomma",
+      "Vetro",
+      "Legno secco"
+    ],
+    "correctIndex": 0,
+    "id": "q0250"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "Secondo la seconda legge di Newton, la forza netta è uguale a...",
+    "answers": [
+      "m/v",
+      "m·a",
+      "a/m",
+      "m+a"
+    ],
+    "correctIndex": 1,
+    "id": "q0251"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "Qual è la quantità di moto di un corpo di massa 2 kg che viaggia a 3 m/s?",
+    "answers": [
+      "1 kg·m/s",
+      "5 kg·m/s",
+      "6 kg·m/s",
+      "9 kg·m/s"
+    ],
+    "correctIndex": 2,
+    "id": "q0252"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "Un corpo di massa 5 kg è soggetto a una forza netta di 20 N. Qual è la sua accelerazione?",
+    "answers": [
+      "2 m/s²",
+      "4 m/s²",
+      "10 m/s²",
+      "100 m/s²"
+    ],
+    "correctIndex": 1,
+    "id": "q0253"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "Quale relazione esprime correttamente la legge di Ohm?",
+    "answers": [
+      "V=IR",
+      "I=VR",
+      "R=VI",
+      "P=V/I"
+    ],
+    "correctIndex": 0,
+    "id": "q0254"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "In un circuito in serie, la corrente elettrica...",
+    "answers": [
+      "È diversa in ogni componente",
+      "È la stessa in tutti i componenti",
+      "È sempre zero",
+      "Dipende solo dalla tensione"
+    ],
+    "correctIndex": 1,
+    "id": "q0255"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "Quale fenomeno spiega perché un oggetto immerso in acqua riceve una spinta verso l'alto?",
+    "answers": [
+      "Effetto Doppler",
+      "Principio di Archimede",
+      "Legge di Hooke",
+      "Effetto fotoelettrico"
+    ],
+    "correctIndex": 1,
+    "id": "q0256"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "L'energia cinetica di un corpo dipende dalla velocità come...",
+    "answers": [
+      "v",
+      "v²",
+      "1/v",
+      "√v"
+    ],
+    "correctIndex": 1,
+    "id": "q0257"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "Se la velocità di un oggetto raddoppia, a parità di massa, la sua energia cinetica...",
+    "answers": [
+      "Raddoppia",
+      "Triplica",
+      "Quadruplica",
+      "Resta uguale"
+    ],
+    "correctIndex": 2,
+    "id": "q0258"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "Qual è circa il periodo di un pendolo semplice lungo 1 m sulla Terra?",
+    "answers": [
+      "0,1 s",
+      "1 s",
+      "2 s",
+      "10 s"
+    ],
+    "correctIndex": 2,
+    "id": "q0259"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "medio",
+    "text": "Quale grandezza si conserva in un sistema isolato durante un urto elastico?",
+    "answers": [
+      "Solo la temperatura",
+      "La quantità di moto e l'energia cinetica",
+      "Solo la velocità",
+      "Solo la pressione"
+    ],
+    "correctIndex": 1,
+    "id": "q0260"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "Il lavoro compiuto da una forza costante parallela allo spostamento è...",
+    "answers": [
+      "F/s",
+      "F·s",
+      "s/F",
+      "F+s"
+    ],
+    "correctIndex": 1,
+    "id": "q0261"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "Per un gas ideale, quale equazione di stato è corretta?",
+    "answers": [
+      "PV=nRT",
+      "P=nVT",
+      "PV=R/(nT)",
+      "PVT=nR"
+    ],
+    "correctIndex": 0,
+    "id": "q0262"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "Qual è la frequenza di un'onda con periodo 0,02 s?",
+    "answers": [
+      "2 Hz",
+      "20 Hz",
+      "50 Hz",
+      "200 Hz"
+    ],
+    "correctIndex": 2,
+    "id": "q0263"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "Quale legge descrive la forza elettrica tra due cariche puntiformi?",
+    "answers": [
+      "Legge di Pascal",
+      "Legge di Coulomb",
+      "Legge di Snell",
+      "Legge di Faraday"
+    ],
+    "correctIndex": 1,
+    "id": "q0264"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "In relatività ristretta, quale grandezza è invariata per tutti gli osservatori inerziali?",
+    "answers": [
+      "La velocità della luce nel vuoto",
+      "La velocità di ogni oggetto",
+      "La massa relativistica",
+      "L'energia cinetica"
+    ],
+    "correctIndex": 0,
+    "id": "q0265"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "Qual è la relazione tra energia e massa a riposo secondo Einstein?",
+    "answers": [
+      "E=mc",
+      "E=mc²",
+      "E=m/c²",
+      "E=c/m"
+    ],
+    "correctIndex": 1,
+    "id": "q0266"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "Per un moto circolare uniforme, l'accelerazione centripeta è diretta...",
+    "answers": [
+      "Lungo la tangente",
+      "Verso il centro della circonferenza",
+      "Verso l'esterno",
+      "Sempre verso l'alto"
+    ],
+    "correctIndex": 1,
+    "id": "q0267"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "Qual è la capacità equivalente di due condensatori identici C collegati in parallelo?",
+    "answers": [
+      "C/2",
+      "C",
+      "2C",
+      "C²"
+    ],
+    "correctIndex": 2,
+    "id": "q0268"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "Un fotone ha energia E=hf. Se la frequenza raddoppia, l'energia...",
+    "answers": [
+      "Si dimezza",
+      "Raddoppia",
+      "Quadruplica",
+      "Non cambia"
+    ],
+    "correctIndex": 1,
+    "id": "q0269"
+  },
+  {
+    "category": "Fisica",
+    "difficulty": "difficile",
+    "text": "In un trasformatore ideale, aumentando la tensione al secondario, la corrente secondaria...",
+    "answers": [
+      "Aumenta nella stessa proporzione",
+      "Diminuisce nella stessa proporzione",
+      "Resta sempre uguale",
+      "Diventa zero"
+    ],
+    "correctIndex": 1,
+    "id": "q0270"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Quanto fa 7×8?",
+    "answers": [
+      "54",
+      "56",
+      "58",
+      "64"
+    ],
+    "correctIndex": 1,
+    "id": "q0271"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Quanto vale √81?",
+    "answers": [
+      "7",
+      "8",
+      "9",
+      "10"
+    ],
+    "correctIndex": 2,
+    "id": "q0272"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Qual è il 25% di 200?",
+    "answers": [
+      "25",
+      "40",
+      "50",
+      "75"
+    ],
+    "correctIndex": 2,
+    "id": "q0273"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Quale frazione equivale a 0,5?",
+    "answers": [
+      "1/3",
+      "1/2",
+      "2/3",
+      "3/4"
+    ],
+    "correctIndex": 1,
+    "id": "q0274"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Quanto fa 2³?",
+    "answers": [
+      "6",
+      "8",
+      "9",
+      "12"
+    ],
+    "correctIndex": 1,
+    "id": "q0275"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Qual è il perimetro di un quadrato di lato 5 cm?",
+    "answers": [
+      "10 cm",
+      "15 cm",
+      "20 cm",
+      "25 cm"
+    ],
+    "correctIndex": 2,
+    "id": "q0276"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Qual è l'area di un rettangolo 4×6?",
+    "answers": [
+      "10",
+      "20",
+      "24",
+      "48"
+    ],
+    "correctIndex": 2,
+    "id": "q0277"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Quanto vale π approssimato alla seconda cifra decimale?",
+    "answers": [
+      "2,14",
+      "3,14",
+      "3,41",
+      "4,13"
+    ],
+    "correctIndex": 1,
+    "id": "q0278"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Se x+7=12, quanto vale x?",
+    "answers": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "correctIndex": 2,
+    "id": "q0279"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "facile",
+    "text": "Qual è il numero primo tra questi?",
+    "answers": [
+      "21",
+      "27",
+      "29",
+      "33"
+    ],
+    "correctIndex": 2,
+    "id": "q0280"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "Quanto vale 3²+4²?",
+    "answers": [
+      "12",
+      "25",
+      "49",
+      "7"
+    ],
+    "correctIndex": 1,
+    "id": "q0281"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "Le soluzioni di x²=49 sono...",
+    "answers": [
+      "7 soltanto",
+      "-7 soltanto",
+      "7 e -7",
+      "49 e -49"
+    ],
+    "correctIndex": 2,
+    "id": "q0282"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "Qual è la derivata di x²?",
+    "answers": [
+      "x",
+      "2x",
+      "x²/2",
+      "2"
+    ],
+    "correctIndex": 1,
+    "id": "q0283"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "Qual è l'integrale indefinito di 2x?",
+    "answers": [
+      "x²+C",
+      "2x²+C",
+      "x+C",
+      "ln(x)+C"
+    ],
+    "correctIndex": 0,
+    "id": "q0284"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "Qual è la probabilità di ottenere testa lanciando una moneta equa?",
+    "answers": [
+      "0",
+      "1/4",
+      "1/2",
+      "1"
+    ],
+    "correctIndex": 2,
+    "id": "q0285"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "La somma degli angoli interni di un triangolo è...",
+    "answers": [
+      "90°",
+      "180°",
+      "270°",
+      "360°"
+    ],
+    "correctIndex": 1,
+    "id": "q0286"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "Quanto vale log10(1000)?",
+    "answers": [
+      "2",
+      "3",
+      "10",
+      "100"
+    ],
+    "correctIndex": 1,
+    "id": "q0287"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "Qual è il coefficiente angolare della retta y=3x-2?",
+    "answers": [
+      "-2",
+      "2",
+      "3",
+      "-3"
+    ],
+    "correctIndex": 2,
+    "id": "q0288"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "Qual è il determinante della matrice [[1,2],[3,4]]?",
+    "answers": [
+      "-2",
+      "2",
+      "5",
+      "10"
+    ],
+    "correctIndex": 0,
+    "id": "q0289"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "medio",
+    "text": "Quanto vale la media aritmetica di 4, 7 e 10?",
+    "answers": [
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "correctIndex": 1,
+    "id": "q0290"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Qual è il limite di sin(x)/x per x che tende a 0?",
+    "answers": [
+      "0",
+      "1",
+      "∞",
+      "Non esiste"
+    ],
+    "correctIndex": 1,
+    "id": "q0291"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Qual è una primitiva di 1/x per x>0?",
+    "answers": [
+      "x²",
+      "ln x",
+      "e^x",
+      "1/x²"
+    ],
+    "correctIndex": 1,
+    "id": "q0292"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Qual è la derivata di sin(x)?",
+    "answers": [
+      "cos(x)",
+      "-cos(x)",
+      "sin(x)",
+      "-sin(x)"
+    ],
+    "correctIndex": 0,
+    "id": "q0293"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Quale serie geometrica converge?",
+    "answers": [
+      "Σ(2^n)",
+      "Σ(1)",
+      "Σ(1/2^n)",
+      "Σ(n)"
+    ],
+    "correctIndex": 2,
+    "id": "q0294"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Quanto vale la norma del vettore (3,4)?",
+    "answers": [
+      "4",
+      "5",
+      "7",
+      "12"
+    ],
+    "correctIndex": 1,
+    "id": "q0295"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Qual è il prodotto scalare tra (1,2) e (3,4)?",
+    "answers": [
+      "7",
+      "8",
+      "10",
+      "11"
+    ],
+    "correctIndex": 2,
+    "id": "q0296"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Se una matrice quadrata ha determinante zero, allora è...",
+    "answers": [
+      "Sempre ortogonale",
+      "Invertibile",
+      "Singolare",
+      "Diagonale"
+    ],
+    "correctIndex": 2,
+    "id": "q0297"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Qual è la soluzione generale di y'=y?",
+    "answers": [
+      "y=x+C",
+      "y=Ce^x",
+      "y=Cx",
+      "y=ln x+C"
+    ],
+    "correctIndex": 1,
+    "id": "q0298"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Quale condizione garantisce che una funzione sia continua in x=a?",
+    "answers": [
+      "Esiste f(a) e lim f(x)=f(a)",
+      "La derivata è sempre zero",
+      "f(a)=0",
+      "La funzione è periodica"
+    ],
+    "correctIndex": 0,
+    "id": "q0299"
+  },
+  {
+    "category": "Matematica",
+    "difficulty": "difficile",
+    "text": "Quante diagonali ha un esagono?",
+    "answers": [
+      "6",
+      "9",
+      "12",
+      "15"
+    ],
+    "correctIndex": 1,
+    "id": "q0300"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "Qual è la capitale dell'Australia?",
+    "answers": [
+      "Sydney",
+      "Melbourne",
+      "Canberra",
+      "Perth"
+    ],
+    "correctIndex": 2,
+    "id": "q0301"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "Quale pianeta è noto come Pianeta Rosso?",
+    "answers": [
+      "Venere",
+      "Marte",
+      "Giove",
+      "Mercurio"
+    ],
+    "correctIndex": 1,
+    "id": "q0302"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "Chi ha scritto la Divina Commedia?",
+    "answers": [
+      "Petrarca",
+      "Dante Alighieri",
+      "Boccaccio",
+      "Manzoni"
+    ],
+    "correctIndex": 1,
+    "id": "q0303"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "Qual è la lingua più parlata in Brasile?",
+    "answers": [
+      "Spagnolo",
+      "Portoghese",
+      "Francese",
+      "Inglese"
+    ],
+    "correctIndex": 1,
+    "id": "q0304"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "Qual è il più grande oceano della Terra?",
+    "answers": [
+      "Atlantico",
+      "Indiano",
+      "Artico",
+      "Pacifico"
+    ],
+    "correctIndex": 3,
+    "id": "q0305"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "Quanti continenti sono comunemente considerati nel modello a 7 continenti?",
+    "answers": [
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "correctIndex": 2,
+    "id": "q0306"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "Quale metallo ha simbolo chimico Fe?",
+    "answers": [
+      "Fluoro",
+      "Ferro",
+      "Francio",
+      "Fosforo"
+    ],
+    "correctIndex": 1,
+    "id": "q0307"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "Qual è il mammifero più grande del mondo?",
+    "answers": [
+      "Elefante africano",
+      "Balena azzurra",
+      "Giraffa",
+      "Orca"
+    ],
+    "correctIndex": 1,
+    "id": "q0308"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "In quale paese si trova Machu Picchu?",
+    "answers": [
+      "Cile",
+      "Perù",
+      "Bolivia",
+      "Messico"
+    ],
+    "correctIndex": 1,
+    "id": "q0309"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "facile",
+    "text": "Quale strumento ha tipicamente 88 tasti?",
+    "answers": [
+      "Violino",
+      "Pianoforte",
+      "Flauto",
+      "Tromba"
+    ],
+    "correctIndex": 1,
+    "id": "q0310"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Quale elemento ha numero atomico 6?",
+    "answers": [
+      "Carbonio",
+      "Ossigeno",
+      "Azoto",
+      "Silicio"
+    ],
+    "correctIndex": 0,
+    "id": "q0311"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Chi dipinse Guernica?",
+    "answers": [
+      "Dalí",
+      "Picasso",
+      "Miró",
+      "Goya"
+    ],
+    "correctIndex": 1,
+    "id": "q0312"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Quale civiltà usava i geroglifici come sistema di scrittura?",
+    "answers": [
+      "Egizia",
+      "Vichinga",
+      "Maya soltanto",
+      "Romana"
+    ],
+    "correctIndex": 0,
+    "id": "q0313"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Qual è il fiume più lungo d'Europa?",
+    "answers": [
+      "Danubio",
+      "Volga",
+      "Reno",
+      "Po"
+    ],
+    "correctIndex": 1,
+    "id": "q0314"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Quale organo produce l'insulina?",
+    "answers": [
+      "Fegato",
+      "Pancreas",
+      "Rene",
+      "Milza"
+    ],
+    "correctIndex": 1,
+    "id": "q0315"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Chi compose la Nona Sinfonia?",
+    "answers": [
+      "Mozart",
+      "Beethoven",
+      "Bach",
+      "Vivaldi"
+    ],
+    "correctIndex": 1,
+    "id": "q0316"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Qual è la moneta ufficiale del Giappone?",
+    "answers": [
+      "Won",
+      "Yuan",
+      "Yen",
+      "Ringgit"
+    ],
+    "correctIndex": 2,
+    "id": "q0317"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Quale paese ha inventato la stampa a caratteri mobili in Europa associata a Gutenberg?",
+    "answers": [
+      "Italia",
+      "Germania",
+      "Francia",
+      "Spagna"
+    ],
+    "correctIndex": 1,
+    "id": "q0318"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Quale gas costituisce la maggior parte dell'atmosfera terrestre?",
+    "answers": [
+      "Ossigeno",
+      "Azoto",
+      "Anidride carbonica",
+      "Argon"
+    ],
+    "correctIndex": 1,
+    "id": "q0319"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "medio",
+    "text": "Qual è la capitale del Canada?",
+    "answers": [
+      "Toronto",
+      "Vancouver",
+      "Ottawa",
+      "Montreal"
+    ],
+    "correctIndex": 2,
+    "id": "q0320"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Quale trattato concluse formalmente la Prima guerra mondiale con la Germania?",
+    "answers": [
+      "Versailles",
+      "Utrecht",
+      "Tordesillas",
+      "Westfalia"
+    ],
+    "correctIndex": 0,
+    "id": "q0321"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Quale filosofo scrisse La Repubblica?",
+    "answers": [
+      "Aristotele",
+      "Platone",
+      "Socrate",
+      "Epicuro"
+    ],
+    "correctIndex": 1,
+    "id": "q0322"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Qual è il nome della galassia che contiene il Sistema Solare?",
+    "answers": [
+      "Andromeda",
+      "Via Lattea",
+      "Triangolo",
+      "Sombrero"
+    ],
+    "correctIndex": 1,
+    "id": "q0323"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Quale lingua appartiene alla famiglia delle lingue uraliche?",
+    "answers": [
+      "Ungherese",
+      "Spagnolo",
+      "Greco",
+      "Arabo"
+    ],
+    "correctIndex": 0,
+    "id": "q0324"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Quale impero aveva Tenochtitlán come capitale?",
+    "answers": [
+      "Inca",
+      "Azteco",
+      "Ottomano",
+      "Bizantino"
+    ],
+    "correctIndex": 1,
+    "id": "q0325"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Chi formulò le tre leggi del moto planetario?",
+    "answers": [
+      "Galileo",
+      "Keplero",
+      "Copernico",
+      "Tycho Brahe"
+    ],
+    "correctIndex": 1,
+    "id": "q0326"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Quale opera è di Mary Shelley?",
+    "answers": [
+      "Dracula",
+      "Frankenstein",
+      "Jane Eyre",
+      "Orgoglio e pregiudizio"
+    ],
+    "correctIndex": 1,
+    "id": "q0327"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Qual è la montagna più alta del mondo sul livello del mare?",
+    "answers": [
+      "K2",
+      "Everest",
+      "Kangchenjunga",
+      "Lhotse"
+    ],
+    "correctIndex": 1,
+    "id": "q0328"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Quale paese ha il maggior numero di isole secondo le statistiche geografiche comunemente citate?",
+    "answers": [
+      "Indonesia",
+      "Svezia",
+      "Filippine",
+      "Giappone"
+    ],
+    "correctIndex": 1,
+    "id": "q0329"
+  },
+  {
+    "category": "Cultura Generale",
+    "difficulty": "difficile",
+    "text": "Quale città era conosciuta nell'antichità come Bisanzio e poi Costantinopoli?",
+    "answers": [
+      "Atene",
+      "Istanbul",
+      "Alessandria",
+      "Smirne"
+    ],
+    "correctIndex": 1,
+    "id": "q0330"
   }
 ]
