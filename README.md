@@ -1,8 +1,8 @@
 # Quiz Party — clone di Buzz!
 
-Quiz party multiplayer ispirato a *Buzz!*: risposte a scelta multipla abbinate a 4 tasti colorati (giallo, blu, arancione, verde), presentatore virtuale con battute, due modalità di punteggio, fase a gironi + torneo ad eliminazione diretta.
+Quiz party multiplayer ispirato a *Buzz!* per PS2: risposte a scelta multipla abbinate a 4 tasti colorati (giallo, blu, arancione, verde), un presentatore-pupazzo animato con battute (anche cattive) e una fase a eliminazione che dura finché non resta un solo imbattuto. Il punteggio si accumula anche tra più partite giocate di fila nella stessa sessione.
 
-Stack: **Node.js + Express + Socket.io** sul backend, **HTML/CSS/JS puro** sul frontend (nessun build step). Le domande vivono in un file JSON, niente database esterno da configurare.
+Stack: **Node.js + Express + Socket.io** sul backend, **HTML/CSS/JS puro** sul frontend (nessun build step, nessun framework). Le domande vivono in un file JSON, niente database esterno da configurare.
 
 ## Come funziona il gioco
 
@@ -11,18 +11,26 @@ Stack: **Node.js + Express + Socket.io** sul backend, **HTML/CSS/JS puro** sul f
 3. **Fase 1**: 10 domande a risposta multipla, 10 secondi a testa per rispondere.
    - **Modalità Rush**: chi risponde correttamente più veloce prende più punti (1°=3, 2°=2, 3°=1, dal 4° in poi 0), risposta sbagliata = -1.
    - **Modalità Classica**: punti fissi (2) a chiunque risponda giusto entro i 10 secondi, indipendentemente dalla velocità; sbagliare non toglie punti.
-4. Finita la Fase 1, i migliori il **50% (arrotondato per eccesso, minimo 2)** dei giocatori collegati accedono al **torneo ad eliminazione diretta**. Gli altri diventano spettatori e vedono comunque lo show.
-5. Nel torneo gli scontri sono 1 contro 1, al meglio di 3 domande (con spareggio in caso di parità); a ogni turno del torneo le domande diventano più difficili. Chi perde è eliminato, chi vince avanza fino alla finale.
-6. Il presentatore virtuale commenta ogni domanda, ogni risposta e l'esito finale con frasi scelte a caso da un elenco.
+4. Finita la Fase 1, il migliore **50% (arrotondato per eccesso, minimo 2)** dei giocatori collegati accede alla **fase a eliminazione**. Gli altri diventano spettatori e vedono comunque lo show.
+5. **Fase a eliminazione (a oltranza)**: stessa domanda per tutti i qualificati, contemporaneamente.
+   - Chi risponde male è eliminato.
+   - Se **sbagliano tutti**, per regola non viene eliminato nessuno: si va avanti comunque con una nuova domanda.
+   - Se **rispondono tutti bene**, nessuna eliminazione: si continua con una domanda più difficile.
+   - La difficoltà sale di un livello a ogni round (fino a fermarsi su "difficile") e le domande vengono pescate senza ripetizioni finché il mazzo non si esaurisce, nel qual caso il mazzo si ricicla: la fase può durare, in teoria, all'infinito.
+   - Si va avanti così finché non resta **un solo giocatore che non ha mai risposto male** in questa fase: è lui il vincitore della partita.
+6. **Punteggio di sessione**: alla fine di ogni partita si assegnano punti cumulativi in base al piazzamento finale — **1000 punti al 1° posto, 500 al 2°, 250 al 3°, 0 dal 4° in poi**. Il presentatore può avviare subito una nuova partita nella stessa stanza (stesso gruppo di giocatori): il punteggio di sessione si somma partita dopo partita, per un vero e proprio torneo della serata.
+7. Il presentatore virtuale — un pupazzetto animato che parla e cambia espressione — commenta ogni domanda, ogni risposta e l'esito finale con frasi scelte a caso da un elenco (alcune scherzose, altre più pungenti, incluse battute mirate su chi è ultimo in classifica o su chi domina/arranca nella classifica cumulativa di sessione).
 
 ### Alcune scelte di design (dove le regole non erano specificate nel dettaglio)
 
 Ho dovuto decidere alcuni dettagli che non avevi specificato — sono facilmente modificabili nel codice se non ti piacciono:
 
 - **Punti modalità Classica**: 2 punti per risposta corretta, 0 per sbagliata/nessuna risposta. Modificabile in `server/lib/GameRoom.js`, funzione `resolveQuestion`.
-- **Nessuna risposta data (Rush)**: vale 0 punti, non -1 (la penalità si applica solo a una risposta sbagliata data attivamente).
-- **Torneo — formato scontro**: ogni incontro è al meglio di 3 domande; in caso di parità dopo 3 domande, si continua a oltranza (spareggio) finché uno dei due non è avanti. Le domande del torneo aumentano di un livello di difficoltà a ogni turno (partendo dal livello scelto in fase di creazione partita), fino a fermarsi su "difficile".
-- **Giocatori dispari nel torneo**: chi non ha un avversario nel proprio turno passa automaticamente al turno successivo ("bye"), assegnato ai giocatori con il piazzamento migliore in classifica dopo la Fase 1.
+- **Nessuna risposta data (Rush)**: vale 0 punti, non -1 (la penalità si applica solo a una risposta sbagliata data attivamente). Durante la fase a eliminazione, invece, non rispondere in tempo conta come "sbagliare" ai fini dell'eliminazione (coerente con lo spirito "chi non risponge giusto è fuori").
+- **Piazzamento oltre il vincitore**: chi viene eliminato più tardi nella fase a eliminazione piazza meglio di chi è uscito prima; a parità di round di eliminazione, si usa come spareggio il punteggio di Fase 1. Chi non si è nemmeno qualificato per la fase a eliminazione piazza sotto tutti i qualificati, ordinato per punteggio di Fase 1.
+- **Riciclo delle domande in eliminazione**: per garantire che la fase possa davvero durare "all'infinito" anche con un mazzo di domande finito, una volta esaurite le domande disponibili per la difficoltà/categoria scelta il mazzo si ricicla (possono ripresentarsi domande già viste in quella fase). Fase 1 invece non ripete mai domande all'interno della stessa partita.
+- **Classifica di sessione per nickname**: il punteggio cumulativo di sessione è associato al nickname scelto dal giocatore (non al socket/dispositivo), così regge anche se qualcuno si riconnette con una scheda diversa. Di conseguenza, due giocatori con lo stesso identico nickname nella stessa sessione condividerebbero il punteggio cumulativo: è un'ipotesi ragionevole per un gioco tra amici, ma tienilo a mente se il tuo gruppo ama i nomi doppi.
+- **Battute "a sorpresa" sulla classifica**: circa una volta ogni tre domande della Fase 1, con più di 2 giocatori in gioco, il presentatore ha una probabilità di prendere in giro chi è ultimo in classifica invece del commento standard. È volutamente casuale, per non essere ripetitivo.
 - **Codice partita**: 5 caratteri alfanumerici (senza caratteri ambigui tipo 0/O o 1/I).
 
 ## Avviare il progetto in locale
@@ -66,11 +74,11 @@ git push -u origin main
 
 Alternative equivalenti: **Railway.app**, **Fly.io**, oppure un piccolo VPS. Evita hosting "solo statici" (Netlify, Vercel senza funzioni serverless dedicate, GitHub Pages) perché non reggono le connessioni WebSocket persistenti di Socket.io.
 
-⚠️ **Nota sulla persistenza delle domande aggiunte in-app**: sui piani gratuiti il filesystem può essere azzerato a ogni nuovo deploy. Le 240 domande di base restano sempre (sono nel repository), ma le domande aggiunte dagli utenti tramite l'app potrebbero non sopravvivere a un redeploy. Per una persistenza solida in futuro, il modo più semplice è collegare un vero database (es. Postgres su Render/Supabase) al posto del file JSON — è un miglioramento possibile ma non necessario per iniziare a giocare.
+⚠️ **Nota sulla persistenza delle domande aggiunte in-app**: sui piani gratuiti il filesystem può essere azzerato a ogni nuovo deploy. Le domande di base restano sempre (sono nel repository), ma le domande aggiunte dagli utenti tramite l'app potrebbero non sopravvivere a un redeploy. Per una persistenza solida in futuro, il modo più semplice è collegare un vero database (es. Postgres su Render/Supabase) al posto del file JSON — è un miglioramento possibile ma non necessario per iniziare a giocare.
 
 ## Come arrivare a 2000+ domande
 
-Il gioco parte con **240 domande** scritte a mano, divise in 10 categorie (Storia, Geografia, Scienza e Natura, Sport, Cinema e TV, Musica, Cucina, Letteratura, Arte, Tecnologia) e 3 livelli di difficoltà. Scriverne 2000 di qualità a mano non era realistico in un'unica sessione, quindi il progetto è pensato per crescere in due modi:
+Il gioco parte con **312 domande** scritte a mano, divise in 13 categorie (Storia, Geografia, Scienza e Natura, Sport, Cinema e TV, Musica, Cucina, Letteratura, Arte, Tecnologia, Fisica, Matematica, Cultura generale) e 3 livelli di difficoltà. Scriverne 2000 di qualità a mano non era realistico in un'unica sessione, quindi il progetto è pensato per crescere in due modi:
 
 1. **Dall'interno del gioco**: c'è una schermata "Aggiungi una domanda" per inserirne di nuove una alla volta (utile per far contribuire tutto il gruppo di amici).
 2. **In blocco via CSV**: usa lo script di importazione.
@@ -93,23 +101,27 @@ Il gioco parte con **240 domande** scritte a mano, divise in 10 categorie (Stori
 
    Puoi generare il CSV come preferisci: scrivendolo a mano, esportandolo da un foglio di calcolo, oppure chiedendo a un assistente AI di generartene un lotto in questo formato da incollare in un file — in quel caso ricontrolla sempre le risposte prima di importarle.
 
+## Il presentatore-pupazzo
+
+Il presentatore è un personaggio originale disegnato in SVG (non un'immagine, quindi resta leggero e si anima via CSS/JS: nessun asset grafico esterno da scaricare). Ogni battuta arriva dal server insieme a un "umore" (`neutral`, `happy`, `evil`, `laugh`, `shock`, `hype`, `celebrate`) che il client usa per cambiare bocca/sopracciglia del pupazzo e farlo "parlare" (bocca animata) mentre il fumetto è a schermo. Le frasi sono tutte in `server/lib/Host.js`, organizzate per momento di gioco: aggiungerne di nuove è questione di aggiungere righe agli array esistenti.
+
 ## Struttura del progetto
 
 ```
 buzz-clone/
 ├── package.json
 ├── server/
-│   ├── server.js            # Express + Socket.io, gestione lobby/matchmaking
+│   ├── server.js            # Express + Socket.io, gestione lobby/matchmaking/sessione
 │   ├── lib/
-│   │   ├── GameRoom.js      # Stato di gioco: fase 1, punteggi, torneo
+│   │   ├── GameRoom.js      # Stato di gioco: fase 1, eliminazione a oltranza, punteggio di sessione
 │   │   ├── QuestionBank.js  # Caricamento/filtro/aggiunta domande
-│   │   └── Host.js          # Battute del presentatore virtuale
-│   ├── data/questions.json  # Le 240 domande di base (+ quelle aggiunte)
+│   │   └── Host.js          # Battute (e "umori") del presentatore virtuale
+│   ├── data/questions.json  # Le 312 domande di base (+ quelle aggiunte)
 │   └── scripts/importCsv.js # Import in blocco da CSV
 └── public/
-    ├── index.html
-    ├── style.css
-    └── app.js                # Tutta la logica del client (schermate, socket)
+    ├── index.html            # Schermate + markup del pupazzo SVG
+    ├── style.css             # Grafica in stile "show TV colorato" + animazioni
+    └── app.js                # Tutta la logica del client (schermate, socket, pupazzo)
 ```
 
 ## Idee per migliorie future
@@ -118,3 +130,4 @@ buzz-clone/
 - Riconnessione automatica di un giocatore che perde la connessione a metà partita.
 - Voce sintetizzata per il presentatore invece del solo testo.
 - Avatar/colori personalizzabili per i giocatori.
+- Uno storico delle partite passate della sessione (non solo il totale cumulativo).
